@@ -8,16 +8,17 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Random;
 
-import me.timbals.gppcc9.entity.Mappers;
+import me.timbals.gppcc9.entity.components.AnimationComponent;
 import me.timbals.gppcc9.entity.components.PositionComponent;
 import me.timbals.gppcc9.entity.components.SizeComponent;
-import me.timbals.gppcc9.entity.components.TextureComponent;
 import me.timbals.gppcc9.entity.components.VelocityComponent;
 import me.timbals.gppcc9.entity.systems.MovementSystem;
 import me.timbals.gppcc9.entity.systems.RenderSystem;
@@ -69,11 +70,26 @@ public class Game extends ApplicationAdapter {
         player.add(entityEngine.createComponent(PositionComponent.class));
         player.add(entityEngine.createComponent(VelocityComponent.class));
 
-        TextureComponent textureComponent = entityEngine.createComponent(TextureComponent.class);
-        assetManager.load("player_walk1.png", Texture.class);
-        assetManager.finishLoadingAsset("player_walk1.png");
-        textureComponent.texture = assetManager.get("player_walk1.png");
-        player.add(textureComponent);
+        AnimationComponent animationComponent = entityEngine.createComponent(AnimationComponent.class);
+
+        assetManager.load("player_walk.png", Texture.class);
+        assetManager.finishLoadingAsset("player_walk.png");
+        Texture textureAnimation = assetManager.get("player_walk.png");
+        TextureRegion[][] region2dArray = TextureRegion.split(textureAnimation, 32, 32);
+        TextureRegion[] regionArray = new TextureRegion[region2dArray.length + region2dArray[0].length];
+
+        int index = 0;
+        for(int i = 0; i < region2dArray.length; i++) {
+            for(int j = 0; j < region2dArray[0].length; j++) {
+                regionArray[index++] = region2dArray[i][j];
+            }
+        }
+
+        Animation animation = new Animation(0.1f, regionArray);
+        animation.setPlayMode(Animation.PlayMode.LOOP);
+
+        animationComponent.animation = animation;
+        player.add(animationComponent);
 
         SizeComponent sizeComponent = entityEngine.createComponent(SizeComponent.class);
         sizeComponent.width = 256;
@@ -82,12 +98,13 @@ public class Game extends ApplicationAdapter {
 
         entityEngine.addEntity(player);
 
-        System.out.println(Mappers.positionMapper.get(player).x);
 	}
 
 	@Override
 	public void render () {
 		float delta = Gdx.graphics.getDeltaTime() / (1f / TARGET_FPS); // this will make delta 1 if target fps is exactly reached
+
+        assetManager.update();
 
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
@@ -96,6 +113,7 @@ public class Game extends ApplicationAdapter {
 
         batch.begin();
         super.render();
+
         batch.end();
 
         entityEngine.update(delta);

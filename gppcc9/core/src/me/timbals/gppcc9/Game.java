@@ -1,25 +1,18 @@
 package me.timbals.gppcc9;
 
-import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
 import java.util.Random;
 
-import me.timbals.gppcc9.entity.components.AnimationComponent;
-import me.timbals.gppcc9.entity.components.PositionComponent;
-import me.timbals.gppcc9.entity.components.SizeComponent;
-import me.timbals.gppcc9.entity.components.VelocityComponent;
+import me.timbals.gppcc9.entity.systems.CameraFollowSystem;
 import me.timbals.gppcc9.entity.systems.MovementSystem;
 import me.timbals.gppcc9.entity.systems.RenderSystem;
 
@@ -61,43 +54,12 @@ public class Game extends ApplicationAdapter {
 
         entityEngine.addSystem(new MovementSystem());
         entityEngine.addSystem(new RenderSystem());
+		entityEngine.addSystem(new CameraFollowSystem());
 
 		// assets
 		assetManager = new AssetManager();
 
-        // create player
-        Entity player = entityEngine.createEntity();
-        player.add(entityEngine.createComponent(PositionComponent.class));
-        player.add(entityEngine.createComponent(VelocityComponent.class));
-
-        AnimationComponent animationComponent = entityEngine.createComponent(AnimationComponent.class);
-
-        assetManager.load("player_walk.png", Texture.class);
-        assetManager.finishLoadingAsset("player_walk.png");
-        Texture textureAnimation = assetManager.get("player_walk.png");
-        TextureRegion[][] region2dArray = TextureRegion.split(textureAnimation, 32, 32);
-        TextureRegion[] regionArray = new TextureRegion[region2dArray.length + region2dArray[0].length];
-
-        int index = 0;
-        for(int i = 0; i < region2dArray.length; i++) {
-            for(int j = 0; j < region2dArray[0].length; j++) {
-                regionArray[index++] = region2dArray[i][j];
-            }
-        }
-
-        Animation animation = new Animation(0.1f, regionArray);
-        animation.setPlayMode(Animation.PlayMode.LOOP);
-
-        animationComponent.animation = animation;
-        player.add(animationComponent);
-
-        SizeComponent sizeComponent = entityEngine.createComponent(SizeComponent.class);
-        sizeComponent.width = 256;
-        sizeComponent.height = 256;
-        player.add(sizeComponent);
-
-        entityEngine.addEntity(player);
-
+        Level.init();
 	}
 
 	@Override

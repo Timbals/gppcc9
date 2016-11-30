@@ -7,11 +7,9 @@ import me.timbals.gppcc9.Game;
 
 public class HtmlLauncher extends GwtApplication {
 
-        // no plans to support HTML in the near future
-
         @Override
         public GwtApplicationConfiguration getConfig () {
-                return new GwtApplicationConfiguration(480, 320);
+                return new GwtApplicationConfiguration(Game.WIDTH, Game.HEIGHT);
         }
 
         @Override

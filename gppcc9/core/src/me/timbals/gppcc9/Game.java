@@ -13,6 +13,8 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import java.util.Random;
 
 import me.timbals.gppcc9.entity.systems.CameraFollowSystem;
+import me.timbals.gppcc9.entity.systems.DisguiseSystem;
+import me.timbals.gppcc9.entity.systems.InputSystem;
 import me.timbals.gppcc9.entity.systems.MovementSystem;
 import me.timbals.gppcc9.entity.systems.RenderSystem;
 
@@ -55,6 +57,8 @@ public class Game extends ApplicationAdapter {
         entityEngine.addSystem(new MovementSystem());
         entityEngine.addSystem(new RenderSystem());
 		entityEngine.addSystem(new CameraFollowSystem());
+		entityEngine.addSystem(new InputSystem());
+        entityEngine.addSystem(new DisguiseSystem());
 
 		// assets
 		assetManager = new AssetManager();

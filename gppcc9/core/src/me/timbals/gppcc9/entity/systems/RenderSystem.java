@@ -13,6 +13,7 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import me.timbals.gppcc9.Game;
 import me.timbals.gppcc9.entity.Mappers;
 import me.timbals.gppcc9.entity.components.AnimationComponent;
+import me.timbals.gppcc9.entity.components.DisguiseComponent;
 import me.timbals.gppcc9.entity.components.PositionComponent;
 import me.timbals.gppcc9.entity.components.SizeComponent;
 import me.timbals.gppcc9.entity.components.TextureComponent;
@@ -40,6 +41,13 @@ public class RenderSystem extends EntitySystem {
 
         for(Entity entity : entities) {
             PositionComponent positionComponent = Mappers.positionMapper.get(entity);
+
+            if(Mappers.disguiseMapper.has(entity)) {
+                DisguiseComponent disguiseComponent = Mappers.disguiseMapper.get(entity);
+                if(disguiseComponent.disguised) {
+                    continue;
+                }
+            }
 
             Texture texture = null;
             TextureRegion textureRegion = null;

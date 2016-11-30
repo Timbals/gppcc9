@@ -9,6 +9,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import me.timbals.gppcc9.entity.components.AnimationComponent;
 import me.timbals.gppcc9.entity.components.CameraFollowComponent;
+import me.timbals.gppcc9.entity.components.CoverComponent;
+import me.timbals.gppcc9.entity.components.DisguiseComponent;
+import me.timbals.gppcc9.entity.components.InputComponent;
 import me.timbals.gppcc9.entity.components.PositionComponent;
 import me.timbals.gppcc9.entity.components.SizeComponent;
 import me.timbals.gppcc9.entity.components.TextureComponent;
@@ -26,18 +29,22 @@ public class Level {
 
         // create player
         Entity player = entityEngine.createEntity();
-        player.add(entityEngine.createComponent(PositionComponent.class));
+        player.add(new PositionComponent());
 
-        VelocityComponent velocityComponentPlayer = entityEngine.createComponent(VelocityComponent.class);
+        VelocityComponent velocityComponentPlayer = new VelocityComponent();
         velocityComponentPlayer.x = 4;
         player.add(velocityComponentPlayer);
 
-        CameraFollowComponent cameraFollowComponentPlayer = entityEngine.createComponent(CameraFollowComponent.class);
+        player.add(new InputComponent());
+
+        player.add(new DisguiseComponent());
+
+        CameraFollowComponent cameraFollowComponentPlayer = new CameraFollowComponent();
         cameraFollowComponentPlayer.followY = false;
         cameraFollowComponentPlayer.offX = Game.WIDTH / 2;
         player.add(cameraFollowComponentPlayer);
 
-        AnimationComponent animationComponentPlayer = entityEngine.createComponent(AnimationComponent.class);
+        AnimationComponent animationComponentPlayer = new AnimationComponent();
 
         assetManager.load("player_walk.png", Texture.class);
         assetManager.finishLoadingAsset("player_walk.png");
@@ -58,7 +65,7 @@ public class Level {
         animationComponentPlayer.animation = animation;
         player.add(animationComponentPlayer);
 
-        SizeComponent sizeComponentPlayer = entityEngine.createComponent(SizeComponent.class);
+        SizeComponent sizeComponentPlayer = new SizeComponent();
         sizeComponentPlayer.width = 256;
         sizeComponentPlayer.height = 256;
         player.add(sizeComponentPlayer);
@@ -68,21 +75,21 @@ public class Level {
         // create guard
         Entity guard = entityEngine.createEntity();
 
-        PositionComponent positionComponentGuard = entityEngine.createComponent(PositionComponent.class);
+        PositionComponent positionComponentGuard = new PositionComponent();
         positionComponentGuard.x = 1024;
         guard.add(positionComponentGuard);
 
-        VelocityComponent velocityComponentGuard = entityEngine.createComponent(VelocityComponent.class);
+        VelocityComponent velocityComponentGuard = new VelocityComponent();
         velocityComponentGuard.x = 2;
         guard.add(velocityComponentGuard);
 
-        TextureComponent textureComponentGuard = entityEngine.createComponent(TextureComponent.class);
+        TextureComponent textureComponentGuard = new TextureComponent();
         assetManager.load("guard.png", Texture.class);
         assetManager.finishLoadingAsset("guard.png");
         textureComponentGuard.texture = assetManager.get("guard.png");
         guard.add(textureComponentGuard);
 
-        SizeComponent sizeComponentGuard = entityEngine.createComponent(SizeComponent.class);
+        SizeComponent sizeComponentGuard = new SizeComponent();
         sizeComponentGuard.width = 256;
         sizeComponentGuard.height = 256;
         guard.add(sizeComponentGuard);
@@ -93,20 +100,22 @@ public class Level {
         for(int i = 0; i < 20; i++) {
             Entity bush = entityEngine.createEntity();
 
-            PositionComponent positionComponentBush = entityEngine.createComponent(PositionComponent.class);
+            PositionComponent positionComponentBush = new PositionComponent();
             positionComponentBush.x = i * 720 + 256;
             bush.add(positionComponentBush);
 
-            SizeComponent sizeComponentBush = entityEngine.createComponent(SizeComponent.class);
+            SizeComponent sizeComponentBush = new SizeComponent();
             sizeComponentBush.width = 196;
             sizeComponentBush.height = 196;
             bush.add(sizeComponentBush);
 
-            TextureComponent textureComponentBush = entityEngine.createComponent(TextureComponent.class);
+            TextureComponent textureComponentBush = new TextureComponent();
             assetManager.load("bush.png", Texture.class);
             assetManager.finishLoadingAsset("bush.png");
             textureComponentBush.texture = assetManager.get("bush.png");
             bush.add(textureComponentBush);
+
+            bush.add(new CoverComponent());
 
             entityEngine.addEntity(bush);
         }

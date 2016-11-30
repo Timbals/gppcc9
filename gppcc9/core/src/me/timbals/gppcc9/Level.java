@@ -5,7 +5,6 @@ import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 import me.timbals.gppcc9.entity.components.AnimationComponent;
 import me.timbals.gppcc9.entity.components.CameraFollowComponent;
@@ -49,17 +48,7 @@ public class Level {
         assetManager.load("player_walk.png", Texture.class);
         assetManager.finishLoadingAsset("player_walk.png");
         Texture textureAnimation = assetManager.get("player_walk.png");
-        TextureRegion[][] region2dArray = TextureRegion.split(textureAnimation, 32, 32);
-        TextureRegion[] regionArray = new TextureRegion[region2dArray.length + region2dArray[0].length];
-
-        int index = 0;
-        for(int i = 0; i < region2dArray.length; i++) {
-            for(int j = 0; j < region2dArray[0].length; j++) {
-                regionArray[index++] = region2dArray[i][j];
-            }
-        }
-
-        Animation animation = new Animation(0.1f, regionArray);
+        Animation animation = new Animation(0.1f, Utils.splitTextureAtlas(textureAnimation, 32, 32));
         animation.setPlayMode(Animation.PlayMode.LOOP);
 
         animationComponentPlayer.animation = animation;

@@ -7,6 +7,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.utils.viewport.ExtendViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
 
@@ -63,6 +64,8 @@ public class Game extends ApplicationAdapter {
 		// assets
 		assetManager = new AssetManager();
 
+        HUD.init();
+
         Level.init();
 	}
 
@@ -83,6 +86,13 @@ public class Game extends ApplicationAdapter {
         batch.end();
 
         entityEngine.update(delta);
+
+        // make hud elements independent of camera position
+        Matrix4 hudMatrix = camera.combined.cpy();
+        hudMatrix.setToOrtho2D(0, 0, WIDTH, HEIGHT);
+        batch.setProjectionMatrix(hudMatrix);
+
+        HUD.update(delta);
 	}
 
 	@Override
